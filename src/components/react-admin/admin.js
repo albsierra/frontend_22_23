@@ -11,7 +11,7 @@ import { CustomerList, CustomerEdit, CustomerCreate } from 'components/react-adm
 import { PostList, PostEdit, PostCreate } from 'components/react-admin/posts';
 import { MigrationList, MigrationEdit, MigrationCreate } from 'components/react-admin/migrations';
 
-import CustomerIcon from '@mui/icons-material/SupportAgent';
+import CustomerIcon from '@mui/icons-material/AccountCircle';
 import UserIcon from '@mui/icons-material/Group';
 import PostIcon from '@mui/icons-material/Book';
 import MigrationIcon from '@mui/icons-material/Storage';
@@ -32,7 +32,7 @@ const RAdmin = () => (
   >
     <Resource name="customers"
       list={CustomerList}
-      con={CustomerIcon}
+      icon={CustomerIcon}
       edit={CustomerEdit}
       create={CustomerCreate}
     />
