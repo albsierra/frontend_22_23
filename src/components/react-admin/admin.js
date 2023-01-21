@@ -17,11 +17,20 @@ import UserIcon from '@mui/icons-material/Group';
 import PostIcon from '@mui/icons-material/Book';
 import MigrationIcon from '@mui/icons-material/Storage';
 
+const token = localStorage.getItem('auth')
+
+const settings = {
+  headers: {
+    Authorization: `Bearer ${token}`,
+    'X-Requested-With': 'XMLHttpRequest'
+  }
+}
+
 // Para php-crud-api
 // const dataProvider = jsonServerProvider('http://encuentro.test/api/records');
 
 // Para Laravel Controllers
-const dataProvider = jsonapiClient('http://encuentro.test/api');
+const dataProvider = jsonapiClient('http://encuentro.test/api', settings);
 
 const RAdmin = () => (
   <Admin
