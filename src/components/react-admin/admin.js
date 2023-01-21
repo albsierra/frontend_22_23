@@ -3,6 +3,7 @@ import { Admin, Resource } from 'react-admin';
 // import jsonServerProvider from 'ra-data-json-server';
 // Para Laravel Controllers
 import jsonapiClient from 'ra-jsonapi-client';
+import { default as AuthProvider } from 'components/react-admin/authProvider';
 
 import { UserList } from 'components/react-admin/users';
 import { CustomerList, CustomerEdit, CustomerCreate } from 'components/react-admin/customers';
@@ -16,8 +17,6 @@ import UserIcon from '@mui/icons-material/Group';
 import PostIcon from '@mui/icons-material/Book';
 import MigrationIcon from '@mui/icons-material/Storage';
 
-import { AdminLayout } from 'components/react-admin/adminLayout';
-
 // Para php-crud-api
 // const dataProvider = jsonServerProvider('http://encuentro.test/api/records');
 
@@ -28,7 +27,7 @@ const RAdmin = () => (
   <Admin
     basename="/dashboard"
     dataProvider={dataProvider}
-    layout={AdminLayout}
+    authProvider={AuthProvider}
   >
     <Resource name="customers"
       list={CustomerList}
