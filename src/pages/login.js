@@ -7,6 +7,7 @@ import Label from 'components/Label'
 import { useLogin, useNotify, Notification } from 'react-admin';
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom';
+import jsonapiClient from 'ra-jsonapi-client';
 
 const Login = (props) => {
 
@@ -30,7 +31,14 @@ const Login = (props) => {
           }
         }
 
-        props.handleSettings(settings)
+        // Para php-crud-api
+        // const dataProvider = jsonServerProvider('http://encuentro.test/api/records');
+
+        // Para Laravel Controllers
+        const API_URL = `${process.env.REACT_APP_BACKEND_URL}/api`
+        const dataProvider = jsonapiClient(API_URL, settings)
+
+        props.handleDataProvider(dataProvider)
       })
       .catch(() =>
         notify('Invalid email or password')
