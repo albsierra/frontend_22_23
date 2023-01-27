@@ -22,12 +22,15 @@ import MigrationIcon from '@mui/icons-material/Storage';
 const RAdmin = () => {
 
   function handleDataProvider(dataProvider) {
-    setDataProvider(dataProvider)
+    setDataProvider(() => dataProvider)
   }
 
   const API_URL = `${process.env.REACT_APP_BACKEND_URL}/api`
-  const myJsonApiClient = jsonapiClient(API_URL)
-  const [dataProvider, setDataProvider] = useState({myJsonApiClient})
+  const [dataProvider, setDataProvider] = useState(null)
+
+  if (!dataProvider) {
+    handleDataProvider(jsonapiClient(API_URL))
+  }
 
   const myLogin = <Login handleDataProvider={handleDataProvider} />
 
