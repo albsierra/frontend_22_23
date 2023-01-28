@@ -1,8 +1,10 @@
 // in src/components/react-admin/authProvider.js
+import jsonapiClient from 'ra-jsonapi-client';
+
 const authProvider = {
-  login: ({ email, password }) => {
+  login: ({ email, password, handleDataProvider }) => {
     const API_URL = `${process.env.REACT_APP_BACKEND_URL}/api`
-    const request = new Request(`${API_URL}/tokens/create`, {
+    const request = new Request(`${API_URL}/tokens`, {
       method: 'POST',
       body: JSON.stringify({ email, password }),
       headers: new Headers({ 'Content-Type': 'application/json' })
@@ -15,6 +17,17 @@ const authProvider = {
         return response.json();
       })
       .then(auth => {
+        const settings = {
+          headers: {
+            Authorization: `${auth.token_type} ${auth.access_token}`,
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        }
+
+        const API_URL = `${process.env.REACT_APP_BACKEND_URL}/api`
+        const dataProvider = jsonapiClient(API_URL, settings)
+
+        handleDataProvider(dataProvider)
         localStorage.setItem('auth', JSON.stringify(auth));
       })
       .catch(() => {
@@ -22,8 +35,27 @@ const authProvider = {
       });
   },
   logout: () => {
-    localStorage.removeItem('auth');
-    return Promise.resolve();
+    let token = localStorage.getItem('auth')
+    if (token) {
+      token = JSON.parse(localStorage.getItem('auth'))
+      localStorage.removeItem('auth');
+      const API_URL = `${process.env.REACT_APP_BACKEND_URL}/api`
+      const request = new Request(`${API_URL}/tokens`, {
+        method: 'DELETE',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          Authorization: `${token.token_type} ${token.access_token}`,
+          'X-Requested-With': 'XMLHttpRequest'
+        })
+      });
+      return fetch(request)
+        .then(() => ( 'login' ))
+        .catch((error) => {
+          throw error
+        });
+    } else {
+      return Promise.resolve()
+    }
   },
   checkAuth: () =>
     (localStorage.getItem('auth') ? Promise.resolve() : Promise.reject()),

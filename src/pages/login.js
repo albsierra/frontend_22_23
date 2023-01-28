@@ -7,7 +7,6 @@ import Label from 'components/Label'
 import { useLogin, useNotify, Notification } from 'react-admin';
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom';
-import jsonapiClient from 'ra-jsonapi-client';
 
 const Login = (props) => {
 
@@ -15,31 +14,11 @@ const Login = (props) => {
   const [password, setPassword] = useState('')
   const login = useLogin();
   const notify = useNotify();
+  const handleDataProvider = props.handleDataProvider
 
   const submitForm = async event => {
     event.preventDefault()
-    login({ email, password })
-      .then(() => {
-        const token = localStorage.getItem('auth')
-          ? JSON.parse(localStorage.getItem('auth'))
-          : { token_type: 'Bearer', access_token: 'undefined' }
-
-        const settings = {
-          headers: {
-            Authorization: `${token.token_type} ${token.access_token}`,
-            'X-Requested-With': 'XMLHttpRequest'
-          }
-        }
-
-        // Para php-crud-api
-        // const dataProvider = jsonServerProvider('http://encuentro.test/api/records');
-
-        // Para Laravel Controllers
-        const API_URL = `${process.env.REACT_APP_BACKEND_URL}/api`
-        const dataProvider = jsonapiClient(API_URL, settings)
-
-        props.handleDataProvider(dataProvider)
-      })
+    login({ email, password, handleDataProvider })
       .catch(() =>
         notify('Invalid email or password')
       );
