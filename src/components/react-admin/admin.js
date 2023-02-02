@@ -36,11 +36,23 @@ const RAdmin = () => {
 
   const myLogin = <Login handleDataProvider={handleDataProvider} />
 
+  let token = localStorage.getItem('auth')
+  let settings = null
+  if (token) {
+    token = JSON.parse(localStorage.getItem('auth'))
+      settings = {
+        headers: {
+          Authorization: `${token.token_type} ${token.access_token}`,
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      }
+    }
+
   const API_URL = `${process.env.REACT_APP_BACKEND_URL}/api`
   const [dataProvider, setDataProvider] = useState(null)
 
   if (!dataProvider) {
-    handleDataProvider(jsonapiClient(API_URL))
+    handleDataProvider(jsonapiClient(API_URL, settings))
   }
 return (
   <Admin
